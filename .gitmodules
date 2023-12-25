@@ -1,0 +1,11 @@
+[submodule "YARR"]
+	path = dependencies/YARR
+	url = https://github.com/MohitShridhar/YARR.git
+	branch = peract
+[submodule "RLBench"]
+	path = dependencies/RLBench
+	url = https://github.com/MohitShridhar/RLBench.git
+	branch = peract
+[submodule "PyRep"]
+	path = dependencies/PyRep
+	url = https://github.com/stepjam/PyRep.git
