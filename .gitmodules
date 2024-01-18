@@ -4,7 +4,7 @@
 	branch = peract
 [submodule "RLBench"]
 	path = dependencies/RLBench
-	url = https://github.com/MohitShridhar/RLBench.git
+	url = https://github.com/RQCRobotics/RLBench.git
 	branch = peract
 [submodule "PyRep"]
 	path = dependencies/PyRep
