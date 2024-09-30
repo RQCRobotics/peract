@@ -29,6 +29,9 @@ from torch.multiprocessing import Process, Value, Manager
 from helpers.clip.core.clip import build_model, load_clip, tokenize
 from omegaconf import DictConfig
 
+import load_my_demo
+
+
 REWARD_SCALE = 100.0
 LOW_DIM_SIZE = 4
 
@@ -118,6 +121,11 @@ def _get_action(
         quat = -quat
     disc_rot = utils.quaternion_to_discrete_euler(quat, rotation_resolution)
     disc_rot = utils.correct_rotation_instability(disc_rot, rotation_resolution)
+    
+    #print(disc_rot)
+    #print(obs_tp1.gripper_pose[3:])
+    #disc_rot = obs_tp1.gripper_pose[3:]
+    #print(disc_rot)
 
     attention_coordinate = obs_tp1.gripper_pose[:3]
     trans_indicies, attention_coordinates = [], []
@@ -169,6 +177,7 @@ def _add_keypoints_to_replay(
             obs_tp1, obs_tm1, rlbench_scene_bounds, voxel_sizes, bounds_offset,
             rotation_resolution, crop_augmentation)
 
+        
         terminal = (k == len(episode_keypoints) - 1)
         reward = float(terminal) * REWARD_SCALE if terminal else 0
 
@@ -195,6 +204,7 @@ def _add_keypoints_to_replay(
         others.update(obs_dict)
 
         timeout = False
+        #print(action.shape)
         replay.add(action, reward, terminal, timeout, **others)
         obs = obs_tp1
 
@@ -237,18 +247,26 @@ def fill_replay(cfg: DictConfig,
     logging.debug('Filling %s replay ...' % task)
     for d_idx in range(num_demos):
         # load demo from disk
-        demo = rlbench_utils.get_stored_demos(
-            amount=1, image_paths=False,
-            dataset_root=cfg.rlbench.demo_path,
-            variation_number=-1, task_name=task,
-            obs_config=obs_config,
-            random_selection=False,
-            from_episode_number=d_idx)[0]
+        #demo = rlbench_utils.get_stored_demos(
+        #    amount=1, image_paths=False,
+        #    dataset_root=cfg.rlbench.demo_path,
+        #    variation_number=-1, task_name=task,
+        #    obs_config=obs_config,
+        #    random_selection=False,
+        #    from_episode_number=d_idx)[0]
 
+        #demo = load_my_demo.get_demos('/home/albert/C2FARM39/put_in_box_floor/reach/episodes', 1, rotation_resolution, from_episode_number=d_idx)[0]
+        demo = load_my_demo.get_demos('/home/albert/teleop_data/', task, 1, rotation_resolution, from_episode_number=d_idx)[0]
         descs = demo._observations[0].misc['descriptions']
 
+        #for i in range(len(demo._observations)):
+            #print(demo._observations[i].gripper_joint_positions, demo._observations[i].gripper_open)
+
+        
         # extract keypoints (a.k.a keyframes)
         episode_keypoints = demo_loading_utils.keypoint_discovery(demo, method=keypoint_method)
+
+
 
         if rank == 0:
             logging.info(f"Loading Demo({d_idx}) - found {len(episode_keypoints)} keypoints - {task}")

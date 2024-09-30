@@ -335,8 +335,8 @@ def extract_obs(obs: Observation,
     obs.joint_positions = None
     if obs.gripper_joint_positions is not None:
         obs.gripper_joint_positions = np.clip(
-            obs.gripper_joint_positions, 0., 0.04)
-
+            obs.gripper_joint_positions, 0., 1.0) # 0.04)
+#DONT FORGET TO CHANGE
     obs_dict = vars(obs)
     obs_dict = {k: v for k, v in obs_dict.items() if v is not None}
     robot_state = np.array([
@@ -369,7 +369,7 @@ def extract_obs(obs: Observation,
     # add timestep to low_dim_state
     time = (1. - (t / float(episode_length - 1))) * 2. - 1.
     obs_dict['low_dim_state'] = np.concatenate(
-        [obs_dict['low_dim_state'], [time]]).astype(np.float32)
+        [obs_dict['low_dim_state'], [*obs.misc['gripper_object_detected']]]).astype(np.float32)
 
     obs.gripper_matrix = grip_mat
     obs.joint_positions = joint_pos

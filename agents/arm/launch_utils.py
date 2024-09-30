@@ -123,7 +123,13 @@ def fill_replay(replay: ReplayBuffer,
         demo = env.env.get_demos(
             task, 1, variation_number=0, random_selection=False,
             from_episode_number=d_idx)[0]
+
+        #demo = 
+
+
         episode_keypoints = demo_loading_utils.keypoint_discovery(demo)
+
+
 
         for i in range(len(demo) - 1):
             if not demo_augmentation and i > 0:

@@ -62,6 +62,9 @@ class CustomRLBenchEnv(RLBenchEnv):
         return obs_elems
 
     def extract_obs(self, obs: Observation, t=None, prev_action=None):
+
+        print(obs)
+
         obs.joint_velocities = None
         grip_mat = obs.gripper_matrix
         grip_pose = obs.gripper_pose
@@ -88,6 +91,9 @@ class CustomRLBenchEnv(RLBenchEnv):
         obs.joint_positions = joint_pos
         obs.gripper_pose = grip_pose
         # obs_dict['gripper_pose'] = grip_pose
+        
+        print(obs_dict)
+
         return obs_dict
 
     def launch(self):

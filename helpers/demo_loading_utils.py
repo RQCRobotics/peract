@@ -5,7 +5,7 @@ import numpy as np
 from rlbench.demo import Demo
 
 
-def _is_stopped(demo, i, obs, stopped_buffer, delta=0.1):
+def _is_stopped(demo, i, obs, stopped_buffer, delta=0.15):
     next_is_not_final = i == (len(demo) - 2)
     gripper_state_no_change = (
             i < (len(demo) - 2) and
@@ -39,6 +39,7 @@ def keypoint_discovery(demo: Demo,
             episode_keypoints.pop(-2)
         logging.debug('Found %d keypoints.' % len(episode_keypoints),
                       episode_keypoints)
+        print(episode_keypoints)
         return episode_keypoints
 
     elif method == 'random':
